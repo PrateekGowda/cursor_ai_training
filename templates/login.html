@@ -10,6 +10,7 @@
     <p class="auth-lead">View simulated CPU, memory, network, and ports for registered Linux hosts.</p>
 
     <form class="auth-form" method="post" action="{{ url_for('login') }}" autocomplete="on">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       <label class="field">
         <span class="field-label">Username</span>
         <input class="field-input" type="text" name="username" required autofocus>
@@ -21,7 +22,7 @@
       <button class="btn btn-primary" type="submit">Sign in</button>
     </form>
 
-    <p class="auth-note">Runs on localhost only. Default credentials land with auth in the next phase.</p>
+    <p class="auth-note">Local demo only. Do not use in production.</p>
   </div>
   <aside class="auth-aside" aria-hidden="true">
     <div class="metric-preview">

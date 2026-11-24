@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block header_actions %}
+<form class="logout-form" method="post" action="{{ url_for('logout') }}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <button class="btn btn-ghost" type="submit">Sign out</button>
+</form>
+{% endblock %}
+
+{% block content %}
+<section class="dash-head">
+  <div>
+    <p class="auth-kicker">Inventory</p>
+    <h1 class="dash-title">Linux servers</h1>
+    <p class="dash-lead">Read-only simulated metrics refresh about every 5 seconds. No SSH.</p>
+  </div>
+</section>
+
+<section class="panel">
+  <h2 class="panel-title">Add server</h2>
+  <form class="add-form" method="post" action="{{ url_for('add_server') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label class="field">
+      <span class="field-label">Name</span>
+      <input class="field-input" type="text" name="name" required maxlength="80" placeholder="e.g. app-host">
+    </label>
+    <label class="field">
+      <span class="field-label">Hostname / IP</span>
+      <input class="field-input" type="text" name="host" required maxlength="120" placeholder="e.g. 10.0.0.12">
+    </label>
+    <label class="field field-wide">
+      <span class="field-label">Description (optional)</span>
+      <input class="field-input" type="text" name="description" maxlength="200" placeholder="Optional notes">
+
+    </label>
+    <button class="btn btn-primary" type="submit">Add</button>
+  </form>
+</section>
+
+<section class="servers" id="server-list" data-refresh-ms="5000">
+  {% if servers %}
+    {% for server in servers %}
+    <article class="server-card" data-server-id="{{ server.id }}">
+      <header class="server-card-head">
+        <div>
+          <h2 class="server-name">{{ server.name }}</h2>
+          <p class="server-host mono">{{ server.host }}</p>
+          {% if server.description %}
+          <p class="server-desc">{{ server.description }}</p>
+          {% endif %}
+        </div>
+        <form method="post" action="{{ url_for('delete_server', server_id=server.id) }}"
+              onsubmit="return confirm('Remove {{ server.name }} from inventory?');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button class="btn btn-danger" type="submit">Remove</button>
+        </form>
+      </header>
+
+      <div class="metrics-grid" aria-live="polite">
+        <div class="metric">
+          <span class="metric-label">CPU</span>
+          <span class="metric-value mono" data-metric="cpu">—</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label">Memory</span>
+          <span class="metric-value mono" data-metric="memory">—</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label">Net in</span>
+          <span class="metric-value mono" data-metric="net_in">—</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label">Net out</span>
+          <span class="metric-value mono" data-metric="net_out">—</span>
+        </div>
+        <div class="metric metric-wide">
+          <span class="metric-label">Listening ports</span>
+          <span class="metric-value mono" data-metric="ports">—</span>
+        </div>
+      </div>
+      <p class="sim-badge">simulated</p>
+    </article>
+    {% endfor %}
+  {% else %}
+    <p class="empty-state">No servers yet. Add a Linux host above to see simulated metrics.</p>
+  {% endif %}
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}" defer></script>
+{% endblock %}
