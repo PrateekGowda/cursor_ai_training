@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Sign in{% endblock %}
+
+{% block content %}
+<section class="auth-shell">
+  <div class="auth-panel">
+    <p class="auth-kicker">Demo monitoring</p>
+    <h1 class="auth-title">Sign in</h1>
+    <p class="auth-lead">View simulated CPU, memory, network, and ports for registered Linux hosts.</p>
+
+    <form class="auth-form" method="post" action="{{ url_for('login') }}" autocomplete="on">
+      <label class="field">
+        <span class="field-label">Username</span>
+        <input class="field-input" type="text" name="username" required autofocus>
+      </label>
+      <label class="field">
+        <span class="field-label">Password</span>
+        <input class="field-input" type="password" name="password" required>
+      </label>
+      <button class="btn btn-primary" type="submit">Sign in</button>
+    </form>
+
+    <p class="auth-note">Runs on localhost only. Default credentials land with auth in the next phase.</p>
+  </div>
+  <aside class="auth-aside" aria-hidden="true">
+    <div class="metric-preview">
+      <div class="metric-row">
+        <span>cpu</span>
+        <span class="mono">42%</span>
+      </div>
+      <div class="metric-row">
+        <span>mem</span>
+        <span class="mono">6.1 / 16 GiB</span>
+      </div>
+      <div class="metric-row">
+        <span>net in</span>
+        <span class="mono">12.4 MB/s</span>
+      </div>
+      <div class="metric-row">
+        <span>ports</span>
+        <span class="mono">22, 80, 443</span>
+      </div>
+    </div>
+  </aside>
+</section>
+{% endblock %}
